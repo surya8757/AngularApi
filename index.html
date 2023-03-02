@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+   
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <link rel="stylesheet" href="./style.css" type="text/css" />
+    <title>Document</title>
+</head>
+
+<body ng-app="myApp">
+    <div ng-controller="contactController">
+        <form>
+            <span>Registration form</span>
+            <div class="form-item">
+                <lebel>FullName</lebel>
+                <input type="text" placeholder="Fullname" name="name" ng-model="newContact.name" />
+            </div>
+            <div class="form-item">
+                <lebel>Email</lebel>
+                <input type="text" placeholder="123@gmail.com" name="email" ng-model="newContact.email" />
+            </div>
+            <div class="form-item">
+                <lebel>PhoneNo</lebel>
+                <input type="number" placeholder="+91-0000000000" name="phone" ng-model="newContact.phone" />
+            </div>
+            <div class="form-item">
+                <input type="hidden" ng-model="newContact.id" />
+                <input type="button" value="Add" ng-click="saveContact()" />
+            </div>
+        </form>
+        <div class="table-item">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="contact in contacts">
+                        <td>{{contact.name}}</td>
+                        <td>{{contact.email}}</td>
+                        <td>{{contact.phone}}</td>
+                        <td>
+                            <a href="#" ng-click="edit(contact.id)">Edit</a>
+                            <a href="#" ng-click="delete(contact.id)">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+    var uid = 0;
+    var app = angular.module('myApp', []);
+    app.controller('contactController', [`$scope`, contactController]);
+    function contactController($scope) {
+        $scope.newContact == null;
+        $scope.contacts = [];
+        $scope.saveContact = function () {
+            if ($scope.newContact.id == null) {
+                uid = uid + 1;
+                $scope.contacts.push($scope.newContact);
+            } else {
+                for (i in $scope.contacts) {
+                    if ($scope.contacts[i].id == $scope.newContact.id) {
+                        $scope.contacts[i] = $scope.newContact;
+                    }
+                }
+            }
+            $scope.newContact = null;
+        }
+        $scope.edit = function (id) {
+            for (var i in $scope.contacts) {
+                if ($scope.contacts[i].id == id) {
+                    $scope.newContact = angular.copy($scope.contacts[i]);
+                }
+            }
+        }
+        $scope.delete = function (id) {
+            for (var i in $scope.contacts) {
+                if ($scope.contacts[i].id == id) {
+                    $scope.contacts.splice(i, 1);
+                    $scope.newContact = {};
+                }
+            }
+        }
+    }
+</script>
